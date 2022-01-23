@@ -21,7 +21,7 @@ I put this API beside [mamizu](https://github.com/HelloYeew/mamizu) because I do
 Clone this repository to your local machine.
 
 ```shell
-git clone <url>
+git clone https://github.com/HelloYeew/mamizu-api
 ```
 
 Install dependencies.
