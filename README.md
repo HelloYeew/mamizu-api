@@ -15,6 +15,7 @@ I put this API beside [mamizu](https://github.com/HelloYeew/mamizu) because I do
 - [ ] CRUD operations
 - [ ] Can manage CRUD operation on site
 - [ ] Documentations
+- [ ] Convert to TypeScript
 
 ## Setup the project
 
