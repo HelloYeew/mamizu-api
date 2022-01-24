@@ -38,4 +38,4 @@ Start the development server
 npm start
 ```
 
-And the server will run on localhost:3001.
+And the server will run on port 3001.
