@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const testRoutes = require('./test');
+const dataApiRoutes = require('./jsonapi');
 
 const appRouter = function (app, fs) {
     // Add some applause on index route
@@ -13,6 +14,9 @@ const appRouter = function (app, fs) {
         console.log('Adding test routes');
         testRoutes(app, fs);
     }
+
+    // Main API routes
+    dataApiRoutes(app, fs);
 
 };
 
