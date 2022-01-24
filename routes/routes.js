@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const testRoutes = require('./test');
 
 const appRouter = function (app, fs) {
@@ -6,8 +8,12 @@ const appRouter = function (app, fs) {
         res.send('<h1>Hello World</h1>');
     });
 
-    // Add routes for API
-    testRoutes(app, fs);
+    if (Boolean(process.env.DEBUG)) {
+        // Add routes for test API
+        console.log('Adding test routes');
+        testRoutes(app, fs);
+    }
+
 };
 
 // Export the router
