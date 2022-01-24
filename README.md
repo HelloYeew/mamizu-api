@@ -45,3 +45,5 @@ npm start
 ```
 
 And the server will run on port 3001.
+
+Note : On `npm start` it will use nodemon to run the server for easier debugging since it will restart the server when there is any change.
