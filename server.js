@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const routes = require('./routes/routes.js')(app, fs);
 
 // Check database file availability
+// TODO: Make this function to check all required files via env variables
 if (fs.existsSync('./data/novel.json')) {
     console.log('Database file found');
 } else {
@@ -26,6 +28,6 @@ if (fs.existsSync('./data/novel.json')) {
 }
 
 // Start server
-const server = app.listen(3001, () => {
+const server = app.listen(parseInt(process.env.PORT), () => {
     console.log('listening on port %s...', server.address().port);
 });
