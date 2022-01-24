@@ -1,5 +1,5 @@
 # mamizu-api
- My personal API to make some stuff easier
+ My personal API to make and develop some personal stuff easier
 
 ## Purpost of this project
 
@@ -30,6 +30,12 @@ Install dependencies.
 
 ```shell
 npm install
+```
+
+Create the new `.env` file for configuration.
+
+```dotenv
+DEBUG=true # If true it will include debug information and debug URL route
 ```
 
 Start the development server
