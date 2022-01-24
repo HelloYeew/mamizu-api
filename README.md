@@ -15,6 +15,7 @@ I put this API beside [mamizu](https://github.com/HelloYeew/mamizu) because I do
 - [ ] CRUD operations
 - [ ] Can manage CRUD operation on site
 - [ ] Documentations
+- [ ] Convert to database
 - [ ] Convert to TypeScript
 
 ## Setup the project
@@ -34,7 +35,7 @@ npm install
 Start the development server
 
 ```shell
-npm satart
+npm start
 ```
 
 And the server will run on localhost:3001.
