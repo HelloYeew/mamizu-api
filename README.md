@@ -18,6 +18,10 @@ I put this API beside [mamizu](https://github.com/HelloYeew/mamizu) because I do
 - [ ] Convert to database
 - [ ] Convert to TypeScript
 
+## Documentation
+
+*Coming soon*
+
 ## Setup the project
 
 Clone this repository to your local machine.
