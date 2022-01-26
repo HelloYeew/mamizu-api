@@ -45,7 +45,7 @@ PORT=3000 # Port number
 Start the development server
 
 ```shell
-npm run dev # for UNIX system like linux or MacOS
+npm run dev # for linux or MacOS
 npm run dev-win # for Windows
 ```
 
