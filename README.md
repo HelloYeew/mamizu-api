@@ -39,16 +39,16 @@ npm install
 Create the new `.env` file for configuration.
 
 ```dotenv
-DEBUG=true # If true it will include debug information and debug URL route
 PORT=3000 # Port number
 ```
 
 Start the development server
 
 ```shell
-npm start
+npm run dev # for UNIX system like linux or MacOS
+npm run dev-win # for Windows
 ```
 
-And the server will run on port 3001.
+And the server will run on your target port.
 
-Note : On `npm start` it will use nodemon to run the server for easier debugging since it will restart the server when there is any change.
+Note : On development server it will use nodemon to run the server for easier debugging since it will restart the server when there is any change.
