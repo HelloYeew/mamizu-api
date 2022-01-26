@@ -25,7 +25,7 @@ const logger = winston.createLogger({
         prettyPrint(),
         timestamp({format:timezoned}),
         printf(({ level, message, timestamp }) => {
-            return `${timestamp} [${level}] : ${message}`;
+            return `${timestamp} [${level}]: ${message}`;
         })
     ),
     transports: [
@@ -41,9 +41,7 @@ const logger = winston.createLogger({
     ]
 });
 
-logger.info('Server started');
-
 // Start server
 const server = app.listen(parseInt(process.env.PORT), () => {
-    console.log('listening on port %s...', server.address().port);
+    logger.info('Server started on port ' + process.env.PORT);
 });
