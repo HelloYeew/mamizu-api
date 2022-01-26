@@ -4,7 +4,7 @@ const expressWinston = require('express-winston');
 const winston = require('winston');
 const fs = require('fs'); // file helper
 const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, label, prettyPrint } = format;
+const { combine, timestamp, label, prettyPrint, printf } = format;
 
 require('dotenv').config();
 
@@ -16,26 +16,34 @@ const routes = require('./routes/routes.js')(app, fs);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(expressWinston.errorLogger({
-    transports: [
-        new winston.transports.Console({
-            json: true,
-            colorize: true
-        })
-    ]
-}));
+const timezoned = () => {
+    return new Date().toLocaleString('sv-SE', { timeZone: 'UTC' });
+}
 
 const logger = winston.createLogger({
     format: combine(
         timestamp(),
-        prettyPrint()
+        prettyPrint(),
+        // timestamp({format:'YYYY-MM-DD HH:mm:ss'}),
+        timestamp({format:timezoned}),
+        printf(({ level, message, timestamp }) => {
+            return `${timestamp} [${level}] : ${message}`;
+        })
     ),
     transports: [
         new winston.transports.Console(),
-        new winston.transports.File({ level: 'debug', filename: './log/debug.log' }),
-        new winston.transports.File({ level: 'info', filename: './log/production.log' })
+        new winston.transports.File({
+            level: 'debug',
+            filename: './log/debug.log'
+        }),
+        new winston.transports.File({
+            level: 'info',
+            filename: './log/production.log'
+        })
     ]
 });
+
+logger.info('Server started');
 
 // Start server
 const server = app.listen(parseInt(process.env.PORT), () => {
