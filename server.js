@@ -1,10 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const expressWinston = require('express-winston');
 const winston = require('winston');
 const fs = require('fs'); // file helper
-const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, label, prettyPrint, printf } = format;
+const { format } = require('winston');
+const { combine, timestamp, prettyPrint, printf } = format;
 
 require('dotenv').config();
 
@@ -24,7 +23,6 @@ const logger = winston.createLogger({
     format: combine(
         timestamp(),
         prettyPrint(),
-        // timestamp({format:'YYYY-MM-DD HH:mm:ss'}),
         timestamp({format:timezoned}),
         printf(({ level, message, timestamp }) => {
             return `${timestamp} [${level}] : ${message}`;
