@@ -32,9 +32,14 @@ const dataApiRoutes = (app, fs) => {
     };
 
     app.get('/:filename', (req, res) => {
-        readFile(data => {
-            res.send(data);
-        }, true, defaultDataFolderPath + req.params['filename'] + '.json');
+        if (req.params['filename'] === 'favicon.ico') {
+            res.sendStatus(404);
+        } else {
+            const filePath = defaultDataFolderPath + req.params['filename'] + '.json';
+            readFile(data => {
+                res.json(data);
+            }, true, filePath);
+        }
     });
 
     // TODO: Continue implementing the rest of the CRUD operations
