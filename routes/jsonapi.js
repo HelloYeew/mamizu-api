@@ -1,4 +1,6 @@
 const fs = require("fs");
+const logger = require('../log')
+
 const dataApiRoutes = (app, fs) => {
     const defaultDataFolderPath = './data/';
 
@@ -32,14 +34,22 @@ const dataApiRoutes = (app, fs) => {
     };
 
     app.get('/:filename', (req, res) => {
-        if (req.params['filename'] === 'favicon.ico') {
-            res.sendStatus(404);
-        } else {
-            const filePath = defaultDataFolderPath + req.params['filename'] + '.json';
-            readFile(data => {
-                res.json(data);
-            }, true, filePath);
+        try {
+            if (req.params['filename'] === 'favicon.ico') {
+                res.sendStatus(404);
+            } else {
+                const filePath = defaultDataFolderPath + req.params['filename'] + '.json';
+                readFile(data => {
+                    res.json(data);
+                }, true, filePath);
+                logger.info("Response sent from " + req.params['filename'])
+            }
+        } catch (error) {
+            logger.error("Error in GET request")
+            logger.error('Filename : ' + req.params['filename'])
+            logger.error('Detail : ' + error)
         }
+
     });
 
     // TODO: Continue implementing the rest of the CRUD operations
