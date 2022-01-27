@@ -15,7 +15,7 @@ const routes = require('./routes/routes.js')(app, fs);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const timezoned = () => {
+const logTimezone = () => {
     return new Date().toLocaleString('sv-SE', { timeZone: 'UTC' });
 }
 
@@ -23,7 +23,7 @@ const logger = winston.createLogger({
     format: combine(
         timestamp(),
         prettyPrint(),
-        timestamp({format:timezoned}),
+        timestamp({format:logTimezone}),
         printf(({ level, message, timestamp }) => {
             return `${timestamp} [${level}]: ${message}`;
         })
