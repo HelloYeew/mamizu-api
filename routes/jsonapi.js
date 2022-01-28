@@ -54,6 +54,7 @@ const dataApiRoutes = (app, fs) => {
 
     // TODO: Continue implementing the rest of the CRUD operations
     app.post('/:filename', (req, res) => {
+        let ApiFilePath = "./data/" + req.params['filename'] + ".json"
         readFile(data => {
             // Just a random ID from date
             // TODO: Replace with a real ID
@@ -61,25 +62,34 @@ const dataApiRoutes = (app, fs) => {
             // TODO: Make log more verbose
             const newDataId = Date.now().toString();
 
-            if (fs.existsSync("./data/" + req.params['filename'] + ".json")) {
+            if (fs.existsSync(ApiFilePath)) {
                 console.log(`data filename:${req.params['filename']} updated`);
+                logger.info(ApiFilePath)
+
+                // Add a new data
+                data[newDataId] = res.body;
+                // TODO: This still undefined
+                logger.debug(res.body);
+
+                // TODO: Make response more meaningful
+                writeFile(JSON.stringify(data, null, 2), () => {
+                    res.status(200).send('new data added');
+                    logger.info("Data added")
+                }, ApiFilePath);
             } else {
                 console.log(`data filename:${req.params['filename']} not found, create a new one...`);
                 // Create database file
-                fs.writeFile('./data/novel.json', '{}', (err) => {
-                    if (err) throw err;
-                    console.log('Database file created');
+                fs.writeFile(ApiFilePath, '{}', (err) => {
+                    if (err) {
+                        logger.error("Error in POST request")
+                        logger.error('Filename : ' + req.params['filename'])
+                        logger.error('Detail : ' + err)
+                    } else {
+                        logger.info('Database file created');
+                    }
                 });
             }
-
-            // Add a new data
-            data[newDataId] = req.body;
-
-            // TODO: Make response more meaningful
-            writeFile(JSON.stringify(data, null, 2), () => {
-                res.status(200).send('new data added');
-            });
-        }, true, defaultDataFolderPath + req.params['filename'] + '.json');
+        }, true, ApiFilePath);
     });
 
     app.put('/:filename/:id', (req, res) => {
