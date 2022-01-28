@@ -6,6 +6,10 @@
 I want to make my personal API as I want to explore more framework and this API is about my personal project.
 So why just not make a API for my personal project? That's it.
 
+## Development status
+
+The development progress is slow because I have a lot of IRL stuff but the GET response is finish.
+
 ## Why this name?
 
 I put this API beside [mamizu](https://github.com/HelloYeew/mamizu) because I don't want to pay more server fee.
