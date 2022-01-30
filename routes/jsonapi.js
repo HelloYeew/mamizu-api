@@ -19,7 +19,7 @@ const dataApiRoutes = (app, fs) => {
                 logger.info('Creating file ' + filePath);
                 fs.writeFile(filePath, '{}', (err) => {
                     if (err) {
-                        logger.error("Error in writeFile operation " + dataApiRoutes.name);
+                        logger.error("Error in writeFile operation " + dataApiRoutes.name + " after creating file in readFile");
                         logger.error('Filename : ' + filePath)
                         logger.error('Detail : ' + err)
                     } else {
@@ -89,7 +89,7 @@ const dataApiRoutes = (app, fs) => {
                 readFile(data => {
                     res.json(data);
                 }, true, filePath);
-                logger.info("GET Response sent from " + req.params['filename'])
+                logger.info("(GET) Response sent from " + req.params['filename'])
             }
         } catch (error) {
             logger.error("Error in GET request")
@@ -99,7 +99,6 @@ const dataApiRoutes = (app, fs) => {
 
     });
 
-    // TODO: Continue implementing the rest of the CRUD operations
     app.post('/:filename', (req, res) => {
         let ApiFilePath = "./data/" + req.params['filename'] + ".json"
         readFile(data => {
@@ -115,21 +114,42 @@ const dataApiRoutes = (app, fs) => {
             // TODO: Make response more meaningful
             writeFile(JSON.stringify(data, null, 2), () => {
                 res.status(200).send('new data added');
-                logger.info("Data added to " + req.params['filename'] + " with data id " + newDataId + " and data " + data[newDataId]);
+                logger.info("(POST) Data added to " + req.params['filename'] + " with data id " + newID);
             }, ApiFilePath);
         }, true, ApiFilePath);
     });
 
     app.put('/:filename/:id', (req, res) => {
-        readFile(data => {
-            // Fetch data
-            const dataId = req.params['id'];
-            data[dataId] = req.body;
+        let ApiFilePath = "./data/" + req.params['filename'] + ".json"
+        try {
+            readFile(data => {
+                // Find the index of the data to be updated
+                // If that data doesn't exist, return 404
+                let index = Object.keys(data).findIndex(key => key === req.params['id']);
+                if (index === -1) {
+                    res.status(404).send('data not found');
+                    logger.warn("(PUT) Data not found in " + req.params['filename'] + " with data id " + req.params['id']);
+                } else {
+                    // Update the data
+                    data[req.params['id']] = req.body;
 
-            writeFile(JSON.stringify(data, null, 2), () => {
-                res.status(200).send(`data filename:${req.params['filename']} id:${dataId} updated`);
-            });
-        }, true, defaultDataFolderPath + req.params['filename'] + '.json');
+                    // Write the data to the file
+                    writeFile(JSON.stringify(data, null, 2), () => {
+                        res.status(200).send('data updated');
+                        logger.info("(PUT) Data updated in " + req.params['filename'] + " with data id " + req.params['id']);
+                    }, ApiFilePath);
+                }
+            }, true, ApiFilePath);
+        } catch (e) {
+            logger.error("Error in PUT request")
+            logger.error('Filename : ' + req.params['filename'])
+            logger.error('Detail : ' + e)
+            if (process.env.DEBUG) {
+                res.status(500).send(e, '\n You are in debug mode, check the logs for more details');
+            } else {
+                res.status(500).send('Internal Server Error');
+            }
+        }
     });
 };
 
