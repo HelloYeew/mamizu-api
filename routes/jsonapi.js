@@ -103,16 +103,14 @@ const dataApiRoutes = (app, fs) => {
     app.post('/:filename', (req, res) => {
         let ApiFilePath = "./data/" + req.params['filename'] + ".json"
         readFile(data => {
-            // Just a random ID from date
-            // TODO: Replace with a real ID
-            // TODO: Add a check to see if the ID already exists
-            const newDataId = Date.now().toString();
 
             if (!fs.existsSync(ApiFilePath)) {
                 logger.warn(`data filename:${req.params['filename']} not found, create a new one...`);
             }
-            // Add a new data
-            data[newDataId] = req.body;
+
+            // Get new ID from the data file
+            let newID = Object.keys(data).length + 1;
+            data[newID] = req.body;
 
             // TODO: Make response more meaningful
             writeFile(JSON.stringify(data, null, 2), () => {
