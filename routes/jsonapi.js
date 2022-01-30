@@ -48,6 +48,7 @@ const dataApiRoutes = (app, fs) => {
             if (err) {
                 throw err;
             } else {
+                // If the data has error details in it, it will try to parse it
                 if (fileData.includes("errno")){
                     fs.writeFile(filePath, fileData, encoding, err => {
                         if (err) {
@@ -81,6 +82,7 @@ const dataApiRoutes = (app, fs) => {
     };
 
     app.get('/:filename', (req, res) => {
+        
         try {
             if (req.params['filename'] === 'favicon.ico') {
                 res.sendStatus(404);
@@ -95,28 +97,44 @@ const dataApiRoutes = (app, fs) => {
             logger.error("Error in GET request")
             logger.error('Filename : ' + req.params['filename'])
             logger.error('Detail : ' + error)
+            if (process.env.DEBUG) {
+                res.status(500).send(error, '\n You are in debug mode, check the logs for more details');
+            } else {
+                res.status(500).send('Internal Server Error');
+            }
         }
 
     });
 
     app.post('/:filename', (req, res) => {
         let ApiFilePath = "./data/" + req.params['filename'] + ".json"
-        readFile(data => {
+        try {
+            readFile(data => {
 
-            if (!fs.existsSync(ApiFilePath)) {
-                logger.warn(`data filename:${req.params['filename']} not found, create a new one...`);
+                if (!fs.existsSync(ApiFilePath)) {
+                    logger.warn(`data filename:${req.params['filename']} not found, create a new one...`);
+                }
+
+                // Get new ID from the data file
+                let newID = Object.keys(data).length + 1;
+                data[newID] = req.body;
+
+                // TODO: Make response more meaningful
+                writeFile(JSON.stringify(data, null, 2), () => {
+                    res.status(200).send('new data added');
+                    logger.info("(POST) Data added to " + req.params['filename'] + " with data id " + newID);
+                }, ApiFilePath);
+            }, true, ApiFilePath);
+        } catch (e) {
+            logger.error("Error in POST request")
+            logger.error('Filename : ' + req.params['filename'])
+            logger.error('Detail : ' + e)
+            if (process.env.DEBUG) {
+                res.status(500).send(e, '\n You are in debug mode, check the logs for more details');
+            } else {
+                res.status(500).send('Internal Server Error');
             }
-
-            // Get new ID from the data file
-            let newID = Object.keys(data).length + 1;
-            data[newID] = req.body;
-
-            // TODO: Make response more meaningful
-            writeFile(JSON.stringify(data, null, 2), () => {
-                res.status(200).send('new data added');
-                logger.info("(POST) Data added to " + req.params['filename'] + " with data id " + newID);
-            }, ApiFilePath);
-        }, true, ApiFilePath);
+        }
     });
 
     app.put('/:filename/:id', (req, res) => {
