@@ -13,9 +13,13 @@ const dataApiRoutes = (app, fs) => {
     ) => {
         fs.readFile(filePath, encoding, (err, data) => {
             if (err) {
-                throw err;
+                logger.error("Error in readFile operation " + dataApiRoutes.name);
+                logger.error('Filename : ' + filePath);
+                logger.error('Detail : ' + err);
+                callback(null);
+            } else {
+                callback(returnJson ? JSON.parse(data) : data);
             }
-            callback(returnJson ? JSON.parse(data) : data);
         });
     };
 
@@ -67,9 +71,7 @@ const dataApiRoutes = (app, fs) => {
                 logger.info(ApiFilePath)
 
                 // Add a new data
-                data[newDataId] = res.body;
-                // TODO: This still undefined
-                logger.debug(res.body);
+                data[newDataId] = req.body;
 
                 // TODO: Make response more meaningful
                 writeFile(JSON.stringify(data, null, 2), () => {
