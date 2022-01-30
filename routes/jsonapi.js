@@ -126,7 +126,6 @@ const dataApiRoutes = (app, fs) => {
                 // Get new ID from the data file
                 data[newID] = req.body;
 
-                // TODO: Make response more meaningful
                 writeFile(JSON.stringify(data, null, 2), () => {
                     res.status(200).send('new data added');
                     logger.info("(POST) Data added to " + req.params['filename'] + " with data id " + newID);
