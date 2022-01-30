@@ -152,7 +152,7 @@ const dataApiRoutes = (app, fs) => {
                 let index = Object.keys(data).findIndex(key => key === req.params['id']);
                 if (index === -1) {
                     res.status(404).send('data not found');
-                    logger.warn("(PUT) Data not found in " + req.params['filename'] + " with data id " + req.params['id']);
+                    logger.info("(PUT) Data not found in " + req.params['filename'] + " with data id " + req.params['id'] + ", returning 404");
                 } else {
                     // Update the data
                     data[req.params['id']] = req.body;
@@ -175,6 +175,8 @@ const dataApiRoutes = (app, fs) => {
             }
         }
     });
+
+    // TODO: Delete a data with better algorithm on generate the new ID in post method
 };
 
 module.exports = dataApiRoutes;
