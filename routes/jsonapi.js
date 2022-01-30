@@ -47,7 +47,31 @@ const dataApiRoutes = (app, fs) => {
             if (err) {
                 throw err;
             }
-            callback({});
+            if (fileData.includes("errno")){
+                fs.writeFile(filePath, fileData, encoding, err => {
+                    if (err) {
+                        logger.error(err);
+                    }
+                    logger.warn("fileData contains error detail, trying to fix it");
+                    logger.warn("Warning detail : " + fileData);
+                    try {
+                        readFile(data => {
+                            delete data["errno"];
+                            delete data["code"];
+                            delete data["syscall"];
+                            delete data["path"];
+                            writeFile(JSON.stringify(data, null, 2), () => {
+                                logger.info("fileData fixed");
+                            }, filePath);
+                            logger.info("fileData fixed");
+                            callback();
+                        }, true, filePath)
+                    } catch (err) {
+                        logger.warn("Fix failed, trying to write it as is");
+                    }
+                });
+            }
+            callback();
         });
     };
 
