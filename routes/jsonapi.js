@@ -31,7 +31,9 @@ const dataApiRoutes = (app, fs) => {
             try {
                 callback(returnJson ? JSON.parse(data) : data);
             } catch(err) {
-                callback({});
+                logger.error("Error in readFile operation " + dataApiRoutes.name);
+                logger.error('Filename : ' + filePath);
+                logger.error('Detail : ' + err);
             }
 
         });
@@ -46,32 +48,37 @@ const dataApiRoutes = (app, fs) => {
         fs.writeFile(filePath, fileData, encoding, err => {
             if (err) {
                 throw err;
-            }
-            if (fileData.includes("errno")){
-                fs.writeFile(filePath, fileData, encoding, err => {
-                    if (err) {
-                        logger.error(err);
-                    }
-                    logger.warn("fileData contains error detail, trying to fix it");
-                    logger.warn("Warning detail : " + fileData);
-                    try {
-                        readFile(data => {
-                            delete data["errno"];
-                            delete data["code"];
-                            delete data["syscall"];
-                            delete data["path"];
-                            writeFile(JSON.stringify(data, null, 2), () => {
+            } else {
+                if (fileData.includes("errno")){
+                    fs.writeFile(filePath, fileData, encoding, err => {
+                        if (err) {
+                            logger.error(err);
+                        }
+                        logger.warn("fileData contains error detail, trying to fix it");
+                        logger.warn("Warning detail : " + fileData);
+                        try {
+                            readFile(data => {
+                                delete data["errno"];
+                                delete data["code"];
+                                delete data["syscall"];
+                                delete data["path"];
+                                writeFile(JSON.stringify(data, null, 2), () => {
+                                    logger.info("fileData fixed");
+                                }, filePath);
                                 logger.info("fileData fixed");
-                            }, filePath);
-                            logger.info("fileData fixed");
-                            callback();
-                        }, true, filePath)
-                    } catch (err) {
-                        logger.warn("Fix failed, trying to write it as is");
-                    }
-                });
+                                callback();
+                            }, true, filePath)
+                        } catch (err) {
+                            logger.warn("Fix failed, trying to write it as is");
+                            logger.warn("Filename : " + filePath);
+                            logger.warn("Error detail : " + err);
+                        }
+                    });
+                } else {
+                    logger.info("fileData written");
+                    callback();
+                }
             }
-            callback();
         });
     };
 
@@ -113,7 +120,7 @@ const dataApiRoutes = (app, fs) => {
             // TODO: Make response more meaningful
             writeFile(JSON.stringify(data, null, 2), () => {
                 res.status(200).send('new data added');
-                logger.info("Data added")
+                logger.info("Data added to " + req.params['filename'] + " with data id " + newDataId + " and data " + data[newDataId]);
             }, ApiFilePath);
         }, true, ApiFilePath);
     });
