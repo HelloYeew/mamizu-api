@@ -108,7 +108,6 @@ const dataApiRoutes = (app, fs) => {
             // Just a random ID from date
             // TODO: Replace with a real ID
             // TODO: Add a check to see if the ID already exists
-            // TODO: Make log more verbose
             const newDataId = Date.now().toString();
 
             if (!fs.existsSync(ApiFilePath)) {

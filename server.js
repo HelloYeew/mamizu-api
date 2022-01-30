@@ -11,6 +11,10 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+logger.info('===========================================================');
+logger.info('Mamizu API log');
+logger.info('===========================================================');
+
 // Start server
 const server = app.listen(parseInt(process.env.PORT), () => {
     logger.info('Server started on port ' + process.env.PORT);
