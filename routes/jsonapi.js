@@ -82,12 +82,14 @@ const dataApiRoutes = (app, fs) => {
     };
 
     app.get('/:filename', (req, res) => {
-        
+        const filePath = defaultDataFolderPath + req.params['filename'] + '.json';
         try {
-            if (req.params['filename'] === 'favicon.ico') {
-                res.sendStatus(404);
+            // We need to escape favicon.ico request to avoid error
+            // and prevent the file creation from read operation
+            if (req.params['filename'] === 'favicon.ico' || !fs.existsSync(filePath)) {
+                res.status(404).send('Not found');
+                logger.info("(GET) " + filePath + " not found, returning 404");
             } else {
-                const filePath = defaultDataFolderPath + req.params['filename'] + '.json';
                 readFile(data => {
                     res.json(data);
                 }, true, filePath);
@@ -111,12 +113,17 @@ const dataApiRoutes = (app, fs) => {
         try {
             readFile(data => {
 
+                let newID = Object.keys(data).length + 1;
+
+                if (data.toString().includes("Error")) {
+                    newID = 1;
+                }
+
                 if (!fs.existsSync(ApiFilePath)) {
                     logger.warn(`data filename:${req.params['filename']} not found, create a new one...`);
                 }
 
                 // Get new ID from the data file
-                let newID = Object.keys(data).length + 1;
                 data[newID] = req.body;
 
                 // TODO: Make response more meaningful
