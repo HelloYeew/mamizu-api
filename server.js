@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 logger.info('===========================================================');
 logger.info('Mamizu API log');
+logger.info('Debug mode : ' + process.env.DEBUG);
 logger.info('===========================================================');
 
 // Start server

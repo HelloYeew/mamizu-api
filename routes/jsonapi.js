@@ -35,7 +35,6 @@ const dataApiRoutes = (app, fs) => {
                 logger.error('Filename : ' + filePath);
                 logger.error('Detail : ' + err);
             }
-
         });
     };
 
@@ -65,7 +64,6 @@ const dataApiRoutes = (app, fs) => {
                                 writeFile(JSON.stringify(data, null, 2), () => {
                                     logger.info("fileData fixed");
                                 }, filePath);
-                                logger.info("fileData fixed");
                                 callback();
                             }, true, filePath)
                         } catch (err) {
@@ -91,7 +89,7 @@ const dataApiRoutes = (app, fs) => {
                 readFile(data => {
                     res.json(data);
                 }, true, filePath);
-                logger.info("Response sent from " + req.params['filename'])
+                logger.info("GET Response sent from " + req.params['filename'])
             }
         } catch (error) {
             logger.error("Error in GET request")
