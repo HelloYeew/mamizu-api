@@ -81,7 +81,7 @@ const dataApiRoutes = (app, fs) => {
         });
     };
 
-    app.get('/:filename', (req, res) => {
+    app.get('/mamizu-api/api/:filename', (req, res) => {
         const filePath = defaultDataFolderPath + req.params['filename'] + '.json';
         try {
             // We need to escape favicon.ico request to avoid error
@@ -108,7 +108,7 @@ const dataApiRoutes = (app, fs) => {
 
     });
 
-    app.post('/:filename', (req, res) => {
+    app.post('/mamizu-api/api/:filename', (req, res) => {
         let ApiFilePath = "./data/" + req.params['filename'] + ".json"
         try {
             readFile(data => {
@@ -143,7 +143,7 @@ const dataApiRoutes = (app, fs) => {
         }
     });
 
-    app.put('/:filename/:id', (req, res) => {
+    app.put('/mamizu-api/:filename/:id', (req, res) => {
         let ApiFilePath = "./data/" + req.params['filename'] + ".json"
         try {
             readFile(data => {
