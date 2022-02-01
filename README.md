@@ -44,6 +44,7 @@ Create the new `.env` file for configuration.
 
 ```dotenv
 PORT=3000 # Port number
+DEBUG=true # Debug mode
 ```
 
 Start the development server
