@@ -12,7 +12,7 @@
   "author": "HelloYeew",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.19.1",
+    "body-parser": "^1.20.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "winston": "^3.7.1"
